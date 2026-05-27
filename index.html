@@ -456,6 +456,7 @@ function renderProdTable(){
     return`<tr class="${cls}"><td class="td-prod" style="max-width:360px">${prodCell}</td><td class="td-marca"><span class="td-badge" style="background:${mb.bg};color:${mb.tx}">${r.marca}</span></td><td class="col-sep">${fmtCell(r.h1_25,prodKpi)}</td><td>${fmtCell(r.h2_25,prodKpi)}</td><td>${fmtCell(r.y2025,prodKpi)}</td><td class="col-sep">${fmtCell(r.q1_26,prodKpi)}</td><td>${fmtCell(r.q2_26,prodKpi)}</td><td>${fmtCell(r.ytd26,prodKpi)}</td><td class="col-sep">${fmtVar(r.q2_vs_q1,prodKpi)}</td><td>${fmtVar(r.um_vs_ytd1,prodKpi)}</td></tr>`;
   }).join(''):'<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--text3)">Sin datos para esta selección</td></tr>';
 }
-renderProdTable();</script>
+renderProdTable();
+renderSummaryTable();</script>
 </body>
 </html>
