@@ -389,7 +389,7 @@ function renderSummaryTable(){
   note.textContent='';
   let rows;
   if(tblVista==='prov'){rows=(TBL_PROV[tblZona]||{})[KPI_KEY[tblKpi]]||[];}
-  else{const softysRows=(TBL_MARCA[tblZona]||{})[KPI_KEY[tblKpi]]||[];const provRows=(TBL_PROV[tblZona]||{})[KPI_KEY[tblKpi]]||[];rows=[...softysRows,...provRows.filter(r=>r.prod!=='Softys')];}
+  else{const softysRows=(TBL_MARCA[tblZona]||{})[KPI_KEY[tblKpi]]||[];const provRows=(TBL_PROV[tblZona]||{})[KPI_KEY[tblKpi]]||[];rows=[...softysRows.filter(r=>r.prod!=='Softys (Total)'),...provRows.filter(r=>r.prod!=='Softys')];}
   const valid=rows.filter(r=>r.q1_26!==null||r.q2_26!==null||r.h1_25!==null||r.h2_25!==null);
   const wMap=tblVista==='prov'?WEIGHTS.prov:Object.assign({},WEIGHTS.marca_softys,Object.fromEntries(Object.entries(WEIGHTS.prov).filter(([k])=>k!=='Softys')));
   valid.sort((a,b)=>(wMap[b.prod]||0)-(wMap[a.prod]||0));
