@@ -131,6 +131,15 @@ td.col-sep{border-left:1.5px solid #e5e9f0}
 .tbl-title-row h3{font-size:13px;font-weight:700}
 .tbl-title-row p{font-size:11px;color:var(--text3);margin-top:2px}
 
+
+.mix-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mix-label{font-size:12px;font-weight:600;min-width:120px;color:var(--text2)}
+.mix-bar{flex:1;display:flex;border-radius:6px;overflow:hidden;height:28px}
+.mix-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .4s;min-width:0;overflow:hidden;white-space:nowrap}
+.mix-seg span{padding:0 6px;overflow:hidden;text-overflow:ellipsis}
+.mix-legend{display:flex;gap:6px 16px;flex-wrap:wrap;margin-bottom:14px}
+.mix-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.mix-leg-sq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
 footer{margin-top:36px;font-size:11px;color:var(--text3);text-align:center;border-top:0.5px solid var(--border);padding-top:16px}
 @media(max-width:720px){.kpi-row{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.delta-wrap{grid-template-columns:1fr}}
 </style>
@@ -233,6 +242,18 @@ footer{margin-top:36px;font-size:11px;color:var(--text3);text-align:center;borde
   <div class="card-hd"><h3>Venta Valor por marca Softys (MM CLP)</h3><p>Millones de pesos mensuales · zona Total</p></div>
   <div class="chart-wrap" style="height:190px"><canvas id="c5"></canvas></div>
   <div class="legend" id="leg5"></div>
+</div>
+
+<!-- MIX ZONA LOCALDATA -->
+<div class="g1 card">
+  <div class="card-hd" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div>
+      <h3>Distribución por zona — Venta Valor</h3>
+      <p>Peso mix % por proveedor · Fuente: Localdata · Dato puntual, no evolutivo</p>
+    </div>
+    <span style="font-size:10px;background:#eef3fb;border:0.5px solid #b8cfea;border-radius:20px;padding:4px 12px;color:#3a6ba8;font-weight:600;white-space:nowrap">Fuente: Localdata</span>
+  </div>
+  <div id="mixZona"></div>
 </div>
 
 <!-- ZONA BARS -->
@@ -491,6 +512,61 @@ function renderProdTable(){
 }
 renderProdTable();
 renderSummaryTable();
+
+/* ── MIX ZONA LOCALDATA ── */
+(function(){
+  const data = [
+    {label:'Total PH',      maipo:43, puente:36, stgo:21, color:'#52525b'},
+    {label:'Softys',        maipo:41, puente:34, stgo:25, color:'#185FA5'},
+    {label:'FPC',           maipo:50, puente:42, stgo:8,  color:'#c0392b'},
+    {label:'Kimberly-Clark',maipo:40, puente:46, stgo:14, color:'#8e44ad'},
+    {label:'Dipisa',        maipo:53, puente:34, stgo:14, color:'#d35400'},
+    {label:'Essity',        maipo:47, puente:26, stgo:27, color:'#0f7566'},
+  ];
+  const zonas = [
+    {key:'maipo',  label:'Maipú+Quilicura', color:'#6b3fa0'},
+    {key:'puente', label:'Puente Alto',     color:'#b05a1a'},
+    {key:'stgo',   label:'Santiago',        color:'#1e6e3a'},
+  ];
+  const el = document.getElementById('mixZona');
+  if(!el) return;
+
+  // Legend
+  let html = '<div class="mix-legend">';
+  zonas.forEach(z => {
+    html += `<span class="mix-leg-item"><span class="mix-leg-sq" style="background:${z.color}"></span>${z.label}</span>`;
+  });
+  html += '</div>';
+
+  // Rows
+  data.forEach(row => {
+    const bdg = row.label==='Total PH'
+      ? `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px;background:#f0f0f0;color:#444">${row.label}</span>`
+      : `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px;background:${row.color}18;color:${row.color}">${row.label}</span>`;
+
+    const segments = zonas.map(z => {
+      const pct = row[z.key];
+      const show = pct >= 10;
+      return `<div class="mix-seg" style="width:${pct}%;background:${z.color}" title="${z.label}: ${pct}%">
+        ${show ? `<span>${pct}%</span>` : ''}
+      </div>`;
+    }).join('');
+
+    // Right side: pct labels for small segments
+    const labels = zonas.map(z =>
+      `<span style="font-size:11px;color:${z.color};font-weight:600;white-space:nowrap">${row[z.key]}%</span>`
+    ).join('<span style="color:var(--border2);margin:0 3px">·</span>');
+
+    html += `<div class="mix-row">
+      <div class="mix-label">${bdg}</div>
+      <div class="mix-bar">${segments}</div>
+      <div style="display:flex;gap:4px;align-items:center;min-width:130px">${labels}</div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+})();
+
 
 </script>
 </body>
