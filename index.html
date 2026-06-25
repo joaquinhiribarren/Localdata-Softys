@@ -546,21 +546,14 @@ renderSummaryTable();
 
     const segments = zonas.map(z => {
       const pct = row[z.key];
-      const show = pct >= 10;
       return `<div class="mix-seg" style="width:${pct}%;background:${z.color}" title="${z.label}: ${pct}%">
-        ${show ? `<span>${pct}%</span>` : ''}
+        <span>${pct}%</span>
       </div>`;
     }).join('');
-
-    // Right side: pct labels for small segments
-    const labels = zonas.map(z =>
-      `<span style="font-size:11px;color:${z.color};font-weight:600;white-space:nowrap">${row[z.key]}%</span>`
-    ).join('<span style="color:var(--border2);margin:0 3px">·</span>');
 
     html += `<div class="mix-row">
       <div class="mix-label">${bdg}</div>
       <div class="mix-bar">${segments}</div>
-      <div style="display:flex;gap:4px;align-items:center;min-width:130px">${labels}</div>
     </div>`;
   });
 
